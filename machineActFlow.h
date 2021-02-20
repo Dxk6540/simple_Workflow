@@ -1,8 +1,17 @@
+/**************************
+ * Author: Xiaoke DENG
+ * Data: Feb. 19, 2021
+ *
+ * Description:
+ * The example of using the simple workflow library.
+// * ************************/
 #ifndef _MACHINE_ACT_FLOW_H_
 #define _MACHINE_ACT_FLOW_H_
-
-#include "./src/workingFSM/fsmMachineBase.h"
 #include <Arduino.h>
+
+// include the actionFlowBase.h file before you use
+#include "./src/workingFSM/fsmMachineBase.h"
+
 
 /***
 usage of the fsm Workflow class:
@@ -11,8 +20,10 @@ usage of the fsm Workflow class:
 
 
 
-*/
-
+/************ Step1: create interface ***********/
+// first create your own updating interface by inheriting the fsmMachineBase class.
+// the fsmMachineBase is an universial interface to call all the workflow.
+// we will call it periodically in a loop.
 
 class fsmMachineCtrl:public fsmMachineBase{
 public:
@@ -29,56 +40,24 @@ public:
 
 
 
-
-
-class actionIdle:public actionBase{
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/************ Step2: create action ***********/
+// then create the single actions classes by inheriting from the actionBase class.
+// three function need to be implement here, which are actionPreparetion(), operation() and actionStateHandle().
+//
+// actionPreparetion() will be called before the periodically execution of the action. 
+//(just before the periodically execution)
+//
+// operation() will be called periodically.
+//
+// actionStateHandle() will be called after the every exection of operation(), and return an actionState.
+// the actionState will be checked by fsmMachineBase to decide if this action is finished and need to launch the next action.
+// the default actionStateHandle() will return an ACTION_SUCCESSFUL.
+// ACTION_SUCCESSFUL: action is finished and need to launch the next action. 
+// ACTION_CONTINUE: action is not finished yet.
 
 class fsmTestAct1:public actionBase{
 public:
+// some config function. 
   int setDelayTime(int time){
     waitingTime = time;
     return 1;
@@ -159,7 +138,14 @@ private:
 
 
 
-
+/************ Step3: create an action workflow ***********/
+// create your own action flow!
+//
+// start() will be called when you change to this action flow.
+// Now I often create the actions in it. I may change it in the future ...
+//
+// finish() is the task to be done after the end of this workflow.
+//
 class actionFlowTest:public actionFlowBase{
 public:
 //  actionFlowTest(){};
