@@ -109,7 +109,7 @@ public:
   virtual int actionPreparetion(actionFlowBase* base){
     fsmMachineCtrl* tempPter = (fsmMachineCtrl*) base->fsmMachine;
     Serial.println("test act 2 preparation");
-
+    timeCnt = 0;
     return 1;
   };
 
@@ -174,10 +174,18 @@ public:
   };
 
   virtual int finish(){
+    this->removeState(actA);
+    this->removeState(actB);
+    this->removeState(actC);
+    
     delete actA;
     delete actB;
     delete actC;
-
+    
+    actA = 0;
+    actB = 0;
+    actC = 0;
+    
     return 0;
   };
 

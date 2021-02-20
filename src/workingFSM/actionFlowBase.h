@@ -28,7 +28,7 @@ public:
   }
 
 
-  virtual int actionFlowStart(fsmMachineBase* machine){
+  int actionFlowStart(fsmMachineBase* machine){
     if (_stateNum == 0) return 0;
 
     currentActionNum = 0;
@@ -81,6 +81,23 @@ public:
     _stateNum ++;
     return 1;
 
+  }
+
+  int removeState(actionBase* actPt){
+    if(_stateNum == 0) return 0;
+    int actPos = -1;
+    for(int i = 0; i < _stateNum; i++){
+      if(actionList[i] == actPt) actPos = i;
+    }
+
+    if(actPos == -1) return 0;
+    actionList[actPos] = 0;
+    for(int i = actPos + 1; i < _stateNum; i++){
+      actionList[i-1] = actionList[i];
+    }
+    actionList[_stateNum - 1] = 0;
+    _stateNum --;
+    return 1;
   }
 
 public:
